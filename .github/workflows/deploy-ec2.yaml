@@ -1,0 +1,29 @@
+name: Deploy Drupal to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y apache2 php7.4 php7.4-mysql libapache2-mod-php7.4
+
+    - name: Copy files to EC2 instance
+      uses: appleboy/scp-action@master
+      with:
+        host: 3.235.156.106
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        source: "."
+        target: "/var/www/html"
+
+    - name: Restart Apache
+      run: sudo systemctl restart apache2
