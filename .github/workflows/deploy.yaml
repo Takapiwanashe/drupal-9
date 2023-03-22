@@ -1,0 +1,19 @@
+name: Deploy to Acquia Cloud
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy to Acquia Cloud
+        uses: acquia/actions-deploy@v1
+        with:
+          api-key: ${{ secrets.ACQUIA_API_KEY }}
+          api-secret: ${{ secrets.ACQUIA_API_SECRET }}
+          subscription: example
+          environment: dev
